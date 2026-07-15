@@ -1,0 +1,185 @@
+local imagesCSV = asset.resource("image_data.csv")
+local sunAsset = asset.require("scene/solarsystem/sun/transforms")
+local earthAsset = asset.require("scene/solarsystem/planets/earth/transforms")
+
+local images = asset.resource("images")
+
+local teleCam = {
+  Identifier = "TeleCam",
+  Parent = earthAsset.EarthIAU.Identifier,
+  -- Renderable = {
+  --   Type = "RenderableGlobe",
+  --   Radii = 6378137,
+  --   PerformShading = false,
+  --   Opacity = 0
+  -- },
+  GUI = {
+    Name = "TeleCam",
+    Path = "/Sky Images",
+    Hidden = true
+  },
+  BoundingSphere = 6378137
+}
+
+local function createImageNode(baseIdentifier, guiPath, imagefile)
+  local genImages = {}
+  local lines = openspace.readCSVFile(openspace.absPath(imagefile))
+
+  for _, line in ipairs(lines) do
+    local identifier = baseIdentifier .. "-" .. line[2]
+    local ra = line[3]
+    local dec = line[4]
+    local size = tonumber(line[5])
+    local scale = tonumber(line[6])
+    local angle = tonumber(line[7])
+    local textureFile = images .. "/" .. line[8]
+
+    local positionVector = openspace.space.convertFromRaDec(ra, dec, 4*3.0856776E16)
+
+    local rad = math.rad(angle+90)
+
+    -- 3. Calculate absolute local reference vectors using Cross Product
+    local absoluteNorth = openspace.space.convertFromRaDec('0h0m0s', '90d0m0.0s', 1.0)
+
+    -- (position x absoluteNorth) = Vector pointing perfectly East
+    local baseEast = {
+        (positionVector[2] * absoluteNorth[3]) - (positionVector[3] * absoluteNorth[2]),
+        (positionVector[3] * absoluteNorth[1]) - (positionVector[1] * absoluteNorth[3]),
+        (positionVector[1] * absoluteNorth[2]) - (positionVector[2] * absoluteNorth[1])
+    }
+
+    -- Normalize the East vector to length 1.0
+    local length = math.sqrt(baseEast[1]^2 + baseEast[2]^2 + baseEast[3]^2)
+    baseEast = { baseEast[1] / length, baseEast[2] / length, baseEast[3] / length }
+
+    -- (baseEast x positionVector) = Vector pointing perfectly North locally
+    local baseNorth = {
+        (baseEast[2] * positionVector[3]) - (baseEast[3] * positionVector[2]),
+        (baseEast[3] * positionVector[1]) - (baseEast[1] * positionVector[3]),
+        (baseEast[1] * positionVector[2]) - (baseEast[2] * positionVector[1])
+    }
+    local lenN = math.sqrt(baseNorth[1]^2 + baseNorth[2]^2 + baseNorth[3]^2)
+    baseNorth = { baseNorth[1] / lenN, baseNorth[2] / lenN, baseNorth[3] / lenN }
+
+    -- 4. Rotate the target X-Axis vector by blending East and North using your angle
+    local rotatedXAxis = {
+        (math.cos(rad) * baseEast[1]) + (math.sin(rad) * baseNorth[1]),
+        (math.cos(rad) * baseEast[2]) + (math.sin(rad) * baseNorth[2]),
+        (math.cos(rad) * baseEast[3]) + (math.sin(rad) * baseNorth[3])
+    }
+
+    local imageNode = {
+        Identifier = identifier,
+        Parent = sunAsset.SolarSystemBarycenter.Identifier,
+        Transform = {
+            Translation = {
+                Type = "StaticTranslation",
+                Position = positionVector
+            },
+            Rotation = {
+                Type = "FixedRotation",
+                Attached = identifier,
+                ZAxis = "Earth",
+                XAxis = rotatedXAxis,
+                XAxisOrthogonal = true
+            },
+            Scale = {
+              Type = "StaticScale",
+              Scale = scale
+            }
+        },
+        Renderable = {
+            Type = "RenderablePlaneImageLocal",
+            Size = size,
+            AutoScale = true,
+            Origin = "Center",
+            Texture = textureFile,
+            Billboard = false,
+            LazyLoading = true,
+            Enabled = false
+        },
+        Tag = { "sky_image", "sky_image_" .. line[1] },
+        GUI = {
+            Name = line[2],
+            Path = guiPath .. "/" .. line[1],
+        }
+    }
+    table.insert(genImages, imageNode)
+  end
+  return genImages
+end
+
+local function imageGoTo(imageNode)
+  local scriptTemp = [[
+    openspace.fadeOut("Scene.SkyImage*.Renderable", nil, "openspace.fadeIn('Scene.%s.Renderable')")
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Aim", "%s")
+    
+    if openspace.navigation.getNavigationState().Anchor ~= 'TeleCam' then
+      openspace.navigation.flyTo('TeleCam', 0)
+    end
+
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Anchor", 'TeleCam')
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAnchor", nil)
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAim", nil)
+    
+    local fov = 3
+    openspace.setPropertyValueSingle("RenderEngine.Windowing.Window_0.HorizFieldOfView", fov, 3, 'QuadraticEaseInOut')
+  ]]
+
+  local imageAction = {
+    Identifier = "GoTo" .. imageNode.Identifier,
+    Name = "Go to " .. imageNode.GUI.Name,
+    Command = string.format(scriptTemp, imageNode.Identifier, imageNode.Identifier), -- todo: calculate fov based on image size
+    GuiPath = imageNode.GUI.Path,
+    isLocal = false
+  }
+  return imageAction
+end
+
+local toggleEarthAction = {
+    Identifier = "HideEarthWhenTelescope",
+    Name = "Hide Earth When Telescope",
+    Command = [[
+      local anchor = openspace.navigation.getNavigationState().Anchor
+      
+      if anchor == 'TeleCam' then
+        openspace.setPropertyValue('Scene.Earth.Renderable.Enabled', false)
+        openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', false)
+        openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', false)
+      else
+        openspace.setPropertyValue("Scene.SkyImage*.Renderable.Enabled", false)
+        openspace.setPropertyValueSingle("RenderEngine.Windowing.Window_0.HorizFieldOfView", 80, 1, 'QuadraticEaseInOut')
+        openspace.setPropertyValue('Scene.Earth.Renderable.Enabled', true)
+        openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', true)
+        openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', true)
+      end
+
+      openspace.printDebug("Focus changed to: " .. tostring(anchor))
+    ]],
+    IsLocal = false
+}
+
+local nodes = {}
+
+asset.onInitialize(function()
+  openspace.addSceneGraphNode(teleCam)
+  nodes = createImageNode("SkyImage", "/Sky Images", imagesCSV)
+
+  for _, node in ipairs(nodes) do
+    openspace.addSceneGraphNode(node)
+    openspace.action.registerAction(imageGoTo(node))
+  end
+
+  openspace.action.registerAction(toggleEarthAction)
+  openspace.event.registerEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
+end)
+
+asset.onDeinitialize(function()
+  for _, node in ipairs(nodes) do
+    openspace.removeSceneGraphNode(node)
+    openspace.action.removeAction(imageGoTo(node))
+  end
+
+  openspace.action.removeAction(toggleEarthAction)
+  openspace.event.unregisterEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
+end)

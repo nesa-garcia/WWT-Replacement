@@ -1,0 +1,22 @@
+group,name,ra,dec,size(m),scale,angle(deg to north),imageName
+vista,helix,22h29m38.61s,-20d50m14.0s,1.347E15,0.5,0.0,helixnebula.jpg
+vlt,virgin,12h27m45.67s,13d0m31.02s,2.262E14,0.5,120.0,virgin.jpg
+messier,M1,05h34m31.94s,22d00m52.2s,1.436E14,0.8,0.0,M1.jpg
+messier,M8,18h03m48s,-24d23m00s,2.3E15,1,0.0,M8.jpg
+messier,M16,18h18m48s,-13d47m00s,2.3E15,1,0.0,M16.jpg
+messier,M17,18h20m48s,-16d11m00s,2.3E15,1,0.0,M17.jpg
+messier,M20,18h02m36s,-23d02m00s,2.3E15,1,0.0,M20.jpg
+messier,M27,19h59m36s,22d43m00s,2.3E15,1,0.0,M27.jpg
+messier,M31,00h41m48s,41d16m00s,2.3E15,1,0.0,M31.jpg
+messier,M42,05h35m24s,-05d27m00s,2.3E15,1,0.0,M42.jpg
+messier,M45,03h47m00s,24d07m00s,2.3E15,1,0.0,M45.jpg
+messier,M46,07h41m48s,-14d49m00s,2.3E15,1,0.0,M46.jpg
+messier,M51,13h30m00s,47d11m00s,2.3E15,1,0.0,M51.jpg
+messier,M57,18h53m36s,33d02m00s,2.3E15,1,0.0,M57.jpg
+messier,M58,12h37m42s,11d49m00s,2.3E15,1,0.0,M58.jpg
+messier,M63,13h15m48s,42d02m00s,2.3E15,1,0.0,M63.jpg
+messier,M64,12h56m42s,21d41m00s,2.3E15,1,0.0,M64.jpg
+messier,M76,01h42m24s,51d34m00s,2.3E15,1,0.0,M76.jpg
+messier,M78,05h46m42s,00d03m00s,2.3E15,1,0.0,M78.jpg
+messier,M82,09h55m48s,69d41m00s,2.3E15,1,0.0,M82.jpg
+messier,M83,13h37m00s,-29d52m00s,2.3E15,1,0.0,M83.jpg
