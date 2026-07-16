@@ -4,7 +4,7 @@
 -- Adding telescopes
 asset.require("./scene/solarsystem/telescopes/WWT_telescopes")
 -- Adding telescope images
-asset.require("./scene/telescope_images")
+asset.require("./scene/telescopeimages/telescope_images")
 -- Adding tardigrades
 asset.require("./scene/solarsystem/extremophiles/beresheet")
 -- Adding asteroids
