@@ -110,6 +110,8 @@ local function createImageNode(baseIdentifier, guiPath, imagefile)
 end
 
 local function imageGoTo(imageNode)
+  -- todo: hide trails when in telescope mode
+  -- todo: calculate fov based on image size
   local scriptTemp = [[
     openspace.fadeOut("Scene.SkyImage*.Renderable", nil, "openspace.fadeIn('Scene.%s.Renderable')")
     openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Aim", "%s")
@@ -175,11 +177,13 @@ asset.onInitialize(function()
 end)
 
 asset.onDeinitialize(function()
+  openspace.event.unregisterEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
+  openspace.action.removeAction(toggleEarthAction)
+
   for _, node in ipairs(nodes) do
-    openspace.removeSceneGraphNode(node)
     openspace.action.removeAction(imageGoTo(node))
+    openspace.removeSceneGraphNode(node)
   end
 
-  openspace.action.removeAction(toggleEarthAction)
-  openspace.event.unregisterEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
+  openspace.removeSceneGraphNode(teleCam)
 end)
