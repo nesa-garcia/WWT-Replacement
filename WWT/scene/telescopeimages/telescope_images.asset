@@ -109,7 +109,6 @@ local function createImageNode(baseIdentifier, guiPath, imagefile)
 end
 
 local function imageGoTo(imageNode)
-  -- todo: hide trails when in telescope mode
   local scriptTemp = [[
     openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.IdleMotion.Apply", false)
     openspace.fadeOut("Scene.*Trail.Renderable")
