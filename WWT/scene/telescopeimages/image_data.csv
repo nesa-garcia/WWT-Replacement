@@ -1,22 +1,21 @@
-group,uniqueAbbrv,name,ra,dec,size(m),scale,angleDeg(right of north),imageName
-vista,helix,helix,22h29m38.61s,-20d50m14.0s,1.347E15,0.5,0.0,helixnebula.jpg
-vlt,virgin,virgin,12h27m45.67s,13d0m31.02s,2.262E14,0.5,120.0,virgin.jpg
-messier,M1,Crab Nebula (M1),05h34m31.94s,22d00m52.2s,1.436E14,0.8,0.0,M1.jpg
-messier,M8,M8,18h03m48s,-24d23m00s,2.3E15,1,0.0,M8.jpg
-messier,M16,M16,18h18m48s,-13d47m00s,2.3E15,1,0.0,M16.jpg
-messier,M17,M17,18h20m48s,-16d11m00s,2.3E15,1,0.0,M17.jpg
-messier,M20,M20,18h02m36s,-23d02m00s,2.3E15,1,0.0,M20.jpg
-messier,M27,M27,19h59m36s,22d43m00s,2.3E15,1,0.0,M27.jpg
-messier,M31,M31,00h41m48s,41d16m00s,2.3E15,1,0.0,M31.jpg
-messier,M42,M42,05h35m24s,-05d27m00s,2.3E15,1,0.0,M42.jpg
-messier,M45,M45,03h47m00s,24d07m00s,2.3E15,1,0.0,M45.jpg
-messier,M46,M46,07h41m48s,-14d49m00s,2.3E15,1,0.0,M46.jpg
-messier,M51,M51,13h30m00s,47d11m00s,2.3E15,1,0.0,M51.jpg
-messier,M57,M57,18h53m36s,33d02m00s,2.3E15,1,0.0,M57.jpg
-messier,M58,M58,12h37m42s,11d49m00s,2.3E15,1,0.0,M58.jpg
-messier,M63,M63,13h15m48s,42d02m00s,2.3E15,1,0.0,M63.jpg
-messier,M64,M64,12h56m42s,21d41m00s,2.3E15,1,0.0,M64.jpg
-messier,M76,M76,01h42m24s,51d34m00s,2.3E15,1,0.0,M76.jpg
-messier,M78,M78,05h46m42s,00d03m00s,2.3E15,1,0.0,M78.jpg
-messier,M82,M82,09h55m48s,69d41m00s,2.3E15,1,0.0,M82.jpg
+group,uniqueAbbrv,name,ra,dec,size(m),scale,angleDeg(N right of vert),imageName
+vista,Helix,Helix Nebula,22h29m38.61s,-20d50m14.00s,1.346729E15,0.50,+0.0,helixnebula.jpg
+vlt,Virgin,Eyes Galaxies,12h27m45.67s,+13d00m31.02s,2.261902E14,0.50,+120.0,virgin.jpg
+messier,M1,Crab Nebula (M1),05h34m32.53s,+22d00m54.87s,1.436128E14,0.87,+0.0,M1.jpg
+messier,M8,Lagoon Nebula (M8),18h03m40.44s,-24d22m32.15s,7.575575E13,0.74,+55.6,M8.jpg
+messier,M16,Pillars of Creation (M16),18h18m52.72s,-13d50m21.97s,1.626415E14,0.58,-35.0,M16.jpg
+messier,M17,Omega/Swan Nebula (M17),18h20m34.37s,-16d09m23.70s,1.274564E14,0.58,-93.0,M17.jpg
+messier,M20,Trifid Nebula (M20),18h02m28.65s,-23d04m27.03s,9.334832E13,0.54,-44.9,M20.jpg
+messier,M27,Dumbbell Nebula (M27),19h59m32.20s,+22d42m43.13s,4.451997E13,0.57,+14.1,M27.jpg
+messier,M31,Andromeda Galaxy (M31),00h43m43.78s,+41d23m08.92s,1.180497E15,0.50,+125.0,M31.jpg
+messier,M42,Orion Nebula (M42),05h35m09.73s,-05d24m50.32s,1.078173E15,0.50,+0.0,M42.jpg
+messier,M45,Pleiades (M45),03h46m50.98s,+24d09m12.79s,1.112999E15,0.95,+0.0,M45.jpg
+messier,M51,Whirlpool Galaxy (M51),13h29m52.34s,+47d12m47.43s,2.383972E14,0.50,+91.9,M51.jpg
+messier,M57,M57,18h53m36s,+33d02m00s,2.3E15,1,0.0,M57.jpg
+messier,M58,M58,12h37m42s,+11d49m00s,2.3E15,1,0.0,M58.jpg
+messier,M63,M63,13h15m48s,+42d02m00s,2.3E15,1,0.0,M63.jpg
+messier,M64,M64,12h56m42s,+21d41m00s,2.3E15,1,0.0,M64.jpg
+messier,M76,M76,01h42m24s,+51d34m00s,2.3E15,1,0.0,M76.jpg
+messier,M78,M78,05h46m42s,+00d03m00s,2.3E15,1,0.0,M78.jpg
+messier,M82,M82,09h55m48s,+69d41m00s,2.3E15,1,0.0,M82.jpg
 messier,M83,M83,13h37m00s,-29d52m00s,2.3E15,1,0.0,M83.jpg

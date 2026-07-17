@@ -111,6 +111,8 @@ end
 local function imageGoTo(imageNode)
   -- todo: hide trails when in telescope mode
   local scriptTemp = [[
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.IdleMotion.Apply", false)
+    openspace.fadeOut("Scene.*Trail.Renderable")
     openspace.fadeOut("Scene.SkyImage*.Renderable", nil, "openspace.fadeIn('Scene.%s.Renderable')")
     openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.Aim", "%s")
     
@@ -156,6 +158,7 @@ local toggleEarthAction = {
         openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', false)
         openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', false)
       else
+        openspace.fadeIn("Scene.*Trail.Renderable")
         openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchorInterpolationTime", 2)
         openspace.setPropertyValue("Scene.SkyImage*.Renderable.Enabled", false)
         openspace.setPropertyValue("RenderEngine.Windowing.Window_0.HorizFieldOfView", 80, 1, 'QuadraticEaseInOut')
