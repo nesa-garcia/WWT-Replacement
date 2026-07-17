@@ -1,0 +1,106 @@
+local sunTransforms = asset.require('scene/solarsystem/sun/transforms')
+local transforms = asset.require('scene/solarsystem/sun/transforms')
+local kernels = asset.resource("data/oumuamua.bsp")
+local textures = asset.resource("data")
+local models = asset.resource("data")
+local coreKernels = asset.require("spice/core")
+
+
+local Oumuamua = {
+    Identifier = "Oumuamua",
+    Parent = transforms.SolarSystemBarycenter.Identifier,
+    InteractionSphere = 1,
+	Renderable = {
+        Type = "RenderableModel",
+		--Body = "50788063",
+		Enabled = true,
+		
+        GeometryFile = models .. "/oumuamua_model.glb",
+         LightSources = {
+      {
+        Type = "SceneGraphLightSource",
+        Identifier = "Sun",
+        Node = sunTransforms.SolarSystemBarycenter.Identifier,
+        Intensity = 1.0
+      }
+    },
+		AmbientIntensity = 0,
+		DiffuseIntensity = 0.65
+    },
+	Transform = {
+		Scale = {
+            Type = "StaticScale",
+            Scale = 10
+        },
+        Translation = {
+            Type = "SpiceTranslation",
+            Target = "50788063",
+            Observer = "SUN",
+			Kernels = kernels
+		},
+		Rotation = {
+                  Type = "FixedRotation",
+				  Attached = "Oumuamua",
+				  YAxis = { -1.0, 0.0, 0.0 },
+				  YAxisOrthogonal = true,
+				  ZAxis = "Sun",
+
+				  YAxisInverted = false
+			}
+        },
+        
+    GUI = {
+        Path = "/Solar System/Asteroids/Oumuamua"
+    }
+}
+
+local OumuamuaTrail = {
+    Identifier = "OumuamuaTrail",
+    Parent = transforms.SolarSystemBarycenter.Identifier,
+    Renderable = {
+        Type = "RenderableTrailOrbit",
+        Translation = {
+            Type = "SpiceTranslation",
+            Target = "50788063",
+            Observer = "SUN",
+			Kernels = kernels
+        },
+		Enabled = false,
+        Color = { 1.0, 0.6, 0.2},   
+        StartTime = "1600 JAN 01 00:00:00",
+        EndTime = "2400 JAN 01 00:00:00",
+        Period = 365.25,
+        Resolution = 3600 * 24
+    },
+    GUI = {
+        Name = "Oumuamua Trail",
+        Path = "/Solar System/Asteroids/Oumuamua"
+    }
+}
+
+asset.onInitialize(function()
+  openspace.spice.loadKernel(kernels)
+  openspace.addSceneGraphNode(Oumuamua)
+  openspace.addSceneGraphNode(OumuamuaTrail)
+--  Scene.Spitzer.Renderable.RotationVector {185.119995,87.870000,270.429993
+end)
+  
+asset.onDeinitialize(function()
+  openspace.removeSceneGraphNode(Oumuamua)
+  openspace.removeSceneGraphNode(OumuamuaTrail)
+  openspace.spice.unloadKernel(kernels)
+end)
+  
+asset.export(Oumuamua)
+asset.export(OumuamuaTrail)
+
+
+asset.meta = {
+    Name = "Spitzer Space Telescope",
+    Version = "1.0",
+    Description = [[ Model and Trail for NASA. Model from Spitzer/CalTech, trail from
+    JPL Horizons]],
+    Author = "Dan Tell",
+    URL = "www.calacademy.org",
+    License = "CC-BY"
+}
