@@ -27,12 +27,12 @@ local function createImageNode(baseIdentifier, guiPath, imagefile)
 
   for _, line in ipairs(lines) do
     local identifier = baseIdentifier .. "-" .. line[2]
-    local ra = line[3]
-    local dec = line[4]
-    local size = tonumber(line[5])
-    local scale = tonumber(line[6])
-    local angle = tonumber(line[7])
-    local textureFile = images .. "/" .. line[8]
+    local ra = line[4]
+    local dec = line[5]
+    local size = tonumber(line[6])
+    local scale = tonumber(line[7])
+    local angle = tonumber(line[8])
+    local textureFile = images .. "/" .. line[9]
 
     local positionVector = openspace.space.convertFromRaDec(ra, dec, 4*3.0856776E16)
 
@@ -96,11 +96,10 @@ local function createImageNode(baseIdentifier, guiPath, imagefile)
             Texture = textureFile,
             Billboard = false,
             LazyLoading = true,
-            Enabled = false
         },
         Tag = { "sky_image", "sky_image_" .. line[1] },
         GUI = {
-            Name = line[2],
+            Name = line[3],
             Path = guiPath .. "/" .. line[1],
         }
     }
@@ -111,27 +110,34 @@ end
 
 local function imageGoTo(imageNode)
   -- todo: hide trails when in telescope mode
-  -- todo: calculate fov based on image size
   local scriptTemp = [[
     openspace.fadeOut("Scene.SkyImage*.Renderable", nil, "openspace.fadeIn('Scene.%s.Renderable')")
-    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Aim", "%s")
+    openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.Aim", "%s")
     
     if openspace.navigation.getNavigationState().Anchor ~= 'TeleCam' then
       openspace.navigation.flyTo('TeleCam', 0)
     end
 
-    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Anchor", 'TeleCam')
-    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAnchor", nil)
-    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAim", nil)
+    openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.Anchor", "TeleCam")
+    openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchor", nil)
+    openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAim", nil)
     
-    local fov = 3
-    openspace.setPropertyValueSingle("RenderEngine.Windowing.Window_0.HorizFieldOfView", fov, 3, 'QuadraticEaseInOut')
+    local size = openspace.propertyValue("Scene.%s.Renderable.Size")
+    size = math.sqrt(size[1]^2 + size[2]^2)
+
+    openspace.printInfo("Size of img: " .. tostring(size))
+    local halfWidth = (size * %f) / 2
+    local fovRad = 2 * math.atan(halfWidth / (0.9*3.0856776E16))
+    local fovDeg = fovRad * (180 / math.pi)
+    local fov = math.max(0.1, math.min(fovDeg, 80))
+
+    openspace.setPropertyValue("RenderEngine.Windowing.Window_0.HorizFieldOfView", fov, 5, 'QuadraticEaseInOut')
   ]]
 
   local imageAction = {
     Identifier = "GoTo" .. imageNode.Identifier,
     Name = "Go to " .. imageNode.GUI.Name,
-    Command = string.format(scriptTemp, imageNode.Identifier, imageNode.Identifier), -- todo: calculate fov based on image size
+    Command = string.format(scriptTemp, imageNode.Identifier, imageNode.Identifier, imageNode.Identifier, imageNode.Transform.Scale.Scale),
     GuiPath = imageNode.GUI.Path,
     isLocal = false
   }
@@ -145,18 +151,20 @@ local toggleEarthAction = {
       local anchor = openspace.navigation.getNavigationState().Anchor
       
       if anchor == 'TeleCam' then
+        openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchorInterpolationTime", 5)
         openspace.setPropertyValue('Scene.Earth.Renderable.Enabled', false)
         openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', false)
         openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', false)
       else
+        openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchorInterpolationTime", 2)
         openspace.setPropertyValue("Scene.SkyImage*.Renderable.Enabled", false)
-        openspace.setPropertyValueSingle("RenderEngine.Windowing.Window_0.HorizFieldOfView", 80, 1, 'QuadraticEaseInOut')
+        openspace.setPropertyValue("RenderEngine.Windowing.Window_0.HorizFieldOfView", 80, 1, 'QuadraticEaseInOut')
         openspace.setPropertyValue('Scene.Earth.Renderable.Enabled', true)
         openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', true)
         openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', true)
       end
 
-      openspace.printDebug("Focus changed to: " .. tostring(anchor))
+      openspace.printInfo("Focus changed to: " .. tostring(anchor))
     ]],
     IsLocal = false
 }
@@ -164,13 +172,15 @@ local toggleEarthAction = {
 local nodes = {}
 
 asset.onInitialize(function()
-  openspace.addSceneGraphNode(teleCam)
   nodes = createImageNode("SkyImage", "/Sky Images", imagesCSV)
 
   for _, node in ipairs(nodes) do
     openspace.addSceneGraphNode(node)
     openspace.action.registerAction(imageGoTo(node))
   end
+
+  openspace.addSceneGraphNode(teleCam)
+  openspace.scheduleScript("openspace.setPropertyValue('Scene.SkyImage*.Renderable.Enabled', false)", 1) -- all images are temp enabled for a sec to allow autoscaling of imgs
 
   openspace.action.registerAction(toggleEarthAction)
   openspace.event.registerEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
@@ -180,10 +190,10 @@ asset.onDeinitialize(function()
   openspace.event.unregisterEventAction("FocusNodeChanged",toggleEarthAction.Identifier)
   openspace.action.removeAction(toggleEarthAction)
 
+  openspace.removeSceneGraphNode(teleCam)
+
   for _, node in ipairs(nodes) do
     openspace.action.removeAction(imageGoTo(node))
     openspace.removeSceneGraphNode(node)
   end
-
-  openspace.removeSceneGraphNode(teleCam)
 end)
