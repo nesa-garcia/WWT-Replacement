@@ -130,9 +130,9 @@ local function imageGoTo(imageNode)
     local halfWidth = (size * %f) / 2
     local fovRad = 2 * math.atan(halfWidth / (0.9*3.0856776E16))
     local fovDeg = fovRad * (180 / math.pi)
-    local fov = math.max(0.05, math.min(fovDeg, 80))
+    local fov = math.max(0.01, math.min(fovDeg, 80))
 
-    openspace.setPropertyValue("RenderEngine.Windowing.Window_0.HorizFieldOfView", fov, 5, 'QuadraticEaseInOut')
+    openspace.setPropertyValue("RenderEngine.Windowing.Window_0.HorizFieldOfView", fov, 6, 'QuadraticEaseInOut')
   ]]
 
   local imageAction = {
@@ -152,7 +152,7 @@ local toggleEarthAction = {
       local anchor = openspace.navigation.getNavigationState().Anchor
       
       if anchor == 'TeleCam' then
-        openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchorInterpolationTime", 5)
+        openspace.setPropertyValue("NavigationHandler.OrbitalNavigator.RetargetAnchorInterpolationTime", 6)
         openspace.setPropertyValue('Scene.Earth.Renderable.Enabled', false)
         openspace.setPropertyValue('Scene.EarthAtmosphere.Renderable.Enabled', false)
         openspace.setPropertyValue('Scene.EarthTrail.Renderable.Enabled', false)
