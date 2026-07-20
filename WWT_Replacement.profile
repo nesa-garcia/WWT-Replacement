@@ -14,7 +14,7 @@
       "identifier": "os.FlyToMercury",
       "is_local": false,
       "name": "Fly to Mercury",
-      "script": "openspace.navigation.flyTo(\"Mercury\", 5)"
+      "script": "openspace.navigation.flyTo(\"Mercury\", 10)"
     },
     {
       "documentation": "Focus camera on Venus",
@@ -30,7 +30,7 @@
       "identifier": "os.FlyToVenus",
       "is_local": false,
       "name": "Fly to Venus",
-      "script": "openspace.navigation.flyTo(\"Venus\", 5)"
+      "script": "openspace.navigation.flyTo(\"Venus\", 10)"
     },
     {
       "documentation": "Fly camera to Earth",
@@ -38,7 +38,7 @@
       "identifier": "os.FlyToEarth",
       "is_local": false,
       "name": "Fly to Earth",
-      "script": "openspace.navigation.flyTo(\"Earth\", 5)"
+      "script": "openspace.navigation.flyTo(\"Earth\", 10)"
     },
     {
       "documentation": "Focus camera on Mars",
@@ -54,7 +54,7 @@
       "identifier": "os.FlyToMars",
       "is_local": false,
       "name": "Fly to Mars",
-      "script": "openspace.navigation.flyTo(\"Mars\", 5)"
+      "script": "openspace.navigation.flyTo(\"Mars\", 10)"
     },
     {
       "documentation": "Focus camera on Jupiter",
@@ -70,7 +70,7 @@
       "identifier": "os.FlyToJupiter",
       "is_local": false,
       "name": "Fly to Jupiter",
-      "script": "openspace.navigation.flyTo(\"Jupiter\", 5)"
+      "script": "openspace.navigation.flyTo(\"Jupiter\", 10)"
     },
     {
       "documentation": "Focus camera on Saturn",
@@ -86,7 +86,7 @@
       "identifier": "os.FlyToSaturn",
       "is_local": false,
       "name": "Fly to Saturn",
-      "script": "openspace.navigation.flyTo(\"Saturn\", 5)"
+      "script": "openspace.navigation.flyTo(\"Saturn\", 10)"
     },
     {
       "documentation": "Focus camera on Uranus",
@@ -102,7 +102,7 @@
       "identifier": "os.FlyToUranus",
       "is_local": false,
       "name": "Fly to Uranus",
-      "script": "openspace.navigation.flyTo(\"Uranus\", 5)"
+      "script": "openspace.navigation.flyTo(\"Uranus\", 10)"
     },
     {
       "documentation": "Focus camera on Neptune",
@@ -118,7 +118,7 @@
       "identifier": "os.FlyToNeptune",
       "is_local": false,
       "name": "Fly to Neptune",
-      "script": "openspace.navigation.flyTo(\"Neptune\", 5)"
+      "script": "openspace.navigation.flyTo(\"Neptune\", 10)"
     },
     {
       "documentation": "Focus camera on Pluto",
@@ -134,7 +134,7 @@
       "identifier": "os.FlyToPluto",
       "is_local": false,
       "name": "Fly to Pluto",
-      "script": "openspace.navigation.flyTo(\"Pluto\", 5)"
+      "script": "openspace.navigation.flyTo(\"Pluto\", 10)"
     },
     {
       "documentation": "Fly camera to Moon",
@@ -142,7 +142,7 @@
       "identifier": "os.FlyToMoon",
       "is_local": false,
       "name": "Fly to Moon",
-      "script": "openspace.navigation.flyTo(\"Moon\", 5)"
+      "script": "openspace.navigation.flyTo(\"Moon\", 10)"
     },
     {
       "documentation": "Fly camera to the Adler Planetarium in Chicago, Illinois",
@@ -150,7 +150,7 @@
       "identifier": "os.FlyToAdler",
       "is_local": false,
       "name": "Fly to Adler Planetarium",
-      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyToGeo(\"Earth\",41.8660,-87.6073,600)"
+      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyToGeo(\"Earth\",41.8660,-87.6073,600,10)"
     },
     {
       "documentation": "Fly camera to the Bean in Chicago, Illinois",
@@ -158,7 +158,7 @@
       "identifier": "os.FlyToBean",
       "is_local": false,
       "name": "Fly to the Bean",
-      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyToGeo(\"Earth\",41.8828,-87.6230,350)"
+      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyToGeo(\"Earth\",41.8828,-87.6230,350,10)"
     },
     {
       "documentation": "Reset simulation time to 1 day before current time",
@@ -174,7 +174,7 @@
       "identifier": "os.FlyToGBT",
       "is_local": false,
       "name": "Fly to Green Bank Telescope",
-      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyTo(\"GBT\", 5)"
+      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyTo(\"GBT\", 10)"
     },
     {
       "documentation": "Fly camera to VLA",
@@ -182,7 +182,7 @@
       "identifier": "os.FlyToVLA",
       "is_local": false,
       "name": "Fly to the Very Large Array",
-      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyTo(\"vla9\", 5)"
+      "script": "openspace.setPropertyValueSingle(\"NavigationHandler.OrbitalNavigator.IdleMotion.Apply\", false)\nopenspace.navigation.flyTo(\"vla9\", 10)"
     },
     {
       "documentation": "Fly camera to tardigrades on the Moon!",
@@ -190,7 +190,7 @@
       "identifier": "os.FlyToTardigrades",
       "is_local": false,
       "name": "Fly to tardigrades",
-      "script": "openspace.navigation.flyTo(\"LunarLander\", 5)"
+      "script": "openspace.navigation.flyTo(\"LunarLander\", 10)"
     },
     {
       "documentation": "Fly camera to Ceres",
@@ -198,7 +198,7 @@
       "identifier": "os.FlyToCeres",
       "is_local": false,
       "name": "Fly to Ceres",
-      "script": "openspace.navigation.flyTo(\"Ceres\", 5)"
+      "script": "openspace.navigation.flyTo(\"Ceres\", 10)"
     },
     {
       "documentation": "Fly camera to Makemake",
@@ -206,7 +206,7 @@
       "identifier": "os.FlyToMakeamake",
       "is_local": false,
       "name": "Fly to Makemake",
-      "script": "openspace.navigation.flyTo(\"MakemakeModel\", 5)"
+      "script": "openspace.navigation.flyTo(\"MakemakeModel\", 10)"
     },
     {
       "documentation": "Fly camera to Vesta",
@@ -214,7 +214,7 @@
       "identifier": "os.FlyToVesta",
       "is_local": false,
       "name": "Fly to Vesta",
-      "script": "openspace.navigation.flyTo(\"VestaModel\", 5)"
+      "script": "openspace.navigation.flyTo(\"VestaModel\", 10)"
     },
     {
       "documentation": "Fly camera to Oumuamua",
@@ -222,7 +222,7 @@
       "identifier": "os.FlyToOumuamua",
       "is_local": false,
       "name": "Fly to Oumuamua",
-      "script": "openspace.setPropertyValueSingle(\"Scene.Oumuamua.Renderable.EnableFaceCulling\", false)\nopenspace.navigation.flyTo(\"Oumuamua\", 5)"
+      "script": "openspace.setPropertyValueSingle(\"Scene.Oumuamua.Renderable.EnableFaceCulling\", false)\nopenspace.navigation.flyTo(\"Oumuamua\", 10)"
     },
     {
       "documentation": "Fly camera to Psyche",
@@ -230,7 +230,7 @@
       "identifier": "os.FlyToPsyche",
       "is_local": false,
       "name": "Fly to Psyche",
-      "script": "openspace.setPropertyValueSingle(\"Scene.Psyche.Renderable.EnableFaceCulling\", false)\nopenspace.navigation.flyTo(\"Psyche\", 5)"
+      "script": "openspace.setPropertyValueSingle(\"Scene.Psyche.Renderable.EnableFaceCulling\", false)\nopenspace.navigation.flyTo(\"Psyche\", 10)"
     },
     {
       "documentation": "Fades in the Asteroid Belt before fading out after 20 seconds",
