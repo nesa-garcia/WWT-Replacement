@@ -8,7 +8,7 @@
 -- asset.require("./6dF")
 -- asset.require("./abell")
 -- asset.require("./allsky_hydrogenalpha")
--- asset.require("./allsky_visible")
+asset.require("./allsky_visible")
 -- asset.require("./alternatestarlabels")
 -- asset.require("./backgroundradiation")
 -- asset.require("./backgroundradiation_multiverse")
