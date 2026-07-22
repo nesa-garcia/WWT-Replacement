@@ -1,0 +1,53 @@
+local SetupCrash = {
+  Identifier = "os.beresheet.SetupCrash",
+  Name = "Set to time of Beresheet crash",
+  Command = "openspace.time.setTime('2019-04-11T07:25:00')",
+  Documentation = "Set the time to the crash time of Beresheet",
+  GuiPath = "/Missions/Beresheet",
+  IsLocal = false
+}
+
+local FocusLander = {
+  Identifier = "os.beresheet.FocusLander",
+  Name = "Focus on lander",
+  Command = "openspace.navigation.setFocus('LunarLander', true, true)",
+  Documentation = "Set camera focus on the Moon",
+  GuiPath = "/Missions/Beresheet",
+  IsLocal = false
+}
+
+local FocusTardigrade1 = {
+  Identifier = "os.beresheet.FocusTardigrade1",
+  Name = "Focus on Tardigrade",
+  Command = "openspace.navigation.setFocus('Tardigrade1', true, true)",
+  Documentation = "Set camera focus on tardigrade",
+  GuiPath = "/Missions/Beresheet",
+  IsLocal = false
+}
+
+
+asset.onInitialize(function()
+  openspace.action.registerAction(SetupCrash)
+  openspace.action.registerAction(FocusLander)
+  openspace.action.registerAction(FocusTardigrade1)
+end)
+
+asset.onDeinitialize(function()
+  openspace.action.removeAction(FocusTardigrade1)
+  openspace.action.removeAction(FocusLander)
+  openspace.action.removeAction(SetupCrash)
+end)
+
+asset.export("SetupCrash", SetupCrash.Identifier)
+asset.export("FocusLander", FocusLander.Identifier)
+asset.export("FocusTardigrade1", FocusTardigrade1.Identifier)
+
+
+
+asset.meta = {
+  Name = "Actions - Beresheet",
+  Description = "Actions related to the Beresheet mission",
+  Author = "Vanessa Garcia",
+  URL = "",
+  License = "MIT license"
+}

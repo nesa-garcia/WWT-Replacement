@@ -16,7 +16,6 @@ local data = asset.resource({
   Version = 1
 })
 
---function that reads the file
 local function createConstellations(baseIdentifier, guiPath, constellationfile)
   local genConstellations = {}
   -- define parsec to meters
@@ -48,10 +47,9 @@ local function createConstellations(baseIdentifier, guiPath, constellationfile)
       name = foundName
     end
 
-    -- Fixed undefined 'globe' variable by wrapping it in quotes
     group = (group == "" and "globe" or group)
 
-    -- Dynamically build tags so we can perfectly isolate zodiac vs non-zodiac
+    -- Build tags so we can perfectly isolate zodiac vs non-zodiac
     local tags = { 
       "image_constellation", 
       "constellation_art_" .. string.lower(group), 
@@ -150,7 +148,83 @@ local HideZodiacArt = {
   IsLocal = false
 }
 
+
 local nodes = {}
+
+-- ===================================================================================================================
+-- Generates a GUI action for every constellation in the CSV
+-- ===================================================================================================================
+
+local function createFocusActions(constellationfile)
+  local actions = {}
+  local lines = openspace.readCSVFile(openspace.absPath(constellationfile))
+  
+  for _, line in ipairs(lines) do
+    local abbreviation = line[2]
+    local name = line[3]
+    
+    local foundName = constellations_helper.findFullName(abbreviation)
+    if foundName ~= nil then
+      name = foundName
+    end
+
+    -- Builds a command string that fades out every other constellation explicitly
+    local fadeOutOthersCommand = ""
+    for _, otherLine in ipairs(lines) do
+      local otherAbbr = otherLine[2]
+      if otherAbbr ~= abbreviation then
+        fadeOutOthersCommand = fadeOutOthersCommand .. string.format('openspace.fadeOut("Scene.ImageConstellation-%s.Renderable", 1); ', otherAbbr)
+      end
+    end
+
+   local action = {
+      Identifier = "os.constellation.focus." .. abbreviation,
+      Name = "Focus on " .. name,
+      Command = string.format([[
+        openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.IdleMotion.Apply", false)
+        openspace.fadeOut("Scene.SunGlare.Renderable")
+
+        
+        openspace.fadeIn("Scene.Constellations.Renderable")
+        %s
+        openspace.fadeIn("Scene.ImageConstellation-%s.Renderable", 1)
+        
+        openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Anchor", "SolarSystemBarycenter")
+        openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Aim", "ImageConstellation-%s")
+
+        openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAnchor", nil)
+        openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.RetargetAim", nil)
+
+        openspace.constellationFocusCounter = (openspace.constellationFocusCounter or 0) + 1
+        local clearLogic = "if openspace.constellationFocusCounter == " .. openspace.constellationFocusCounter .. " then openspace.action.triggerAction('os.constellation.focus.Clear') end"
+        openspace.scheduleScript(clearLogic, 15)
+  
+
+      ]], fadeOutOthersCommand, abbreviation, abbreviation),
+      Documentation = "Turns on lines, isolates " .. name .. " art, and focuses the camera.",
+      GuiPath = "/Constellations/Focus", 
+      IsLocal = false
+    }
+    table.insert(actions, action)
+  end
+  return actions
+end
+
+local ClearConstellationFocus = {
+  Identifier = "os.constellation.focus.Clear",
+  Name = "Clear Focus (Turn Everything Off)",
+  Command = [[
+    openspace.fadeOut("Scene.Constellations.Renderable")
+    openspace.fadeOut("{image_constellation}")
+    openspace.setPropertyValueSingle("NavigationHandler.OrbitalNavigator.Aim", "")
+    openspace.fadeIn("Scene.SunGlare.Renderable")
+  ]],
+  Documentation = "Turns off constellation lines and art, and clears the camera aim.",
+  GuiPath = "/Constellations/Focus",
+  IsLocal = false
+}
+
+local focusActions = {}
 
 asset.onInitialize(function()
   local constellationsCSV = images .. "constellation_data.csv"
@@ -159,6 +233,12 @@ asset.onInitialize(function()
   for _, n in ipairs(nodes) do
     openspace.addSceneGraphNode(n)
   end
+
+  focusActions = createFocusActions(constellationsCSV)
+  for _, act in ipairs(focusActions) do
+    openspace.action.registerAction(act)
+  end
+  openspace.action.registerAction(ClearConstellationFocus)
 
   openspace.action.registerAction(ShowArt)
   openspace.action.registerAction(HideArt)
@@ -171,15 +251,17 @@ asset.onDeinitialize(function()
     openspace.removeSceneGraphNode(n.Identifier)
   end
 
+  for _, act in ipairs(focusActions) do
+    openspace.action.removeAction(act.Identifier)
+  end
+  openspace.action.removeAction(ClearConstellationFocus.Identifier)
+
   openspace.action.removeAction(HideZodiacArt)
   openspace.action.removeAction(ShowZodiacArt)
   openspace.action.removeAction(HideArt)
   openspace.action.removeAction(ShowArt)
 end)
 
-for _, n in ipairs(nodes) do
-  asset.export(n)
-end
 asset.export("ShowArtAction", ShowArt.Identifier)
 asset.export("HideArtAction", HideArt.Identifier)
 asset.export("ShowZodiacArt", ShowZodiacArt.Identifier)
